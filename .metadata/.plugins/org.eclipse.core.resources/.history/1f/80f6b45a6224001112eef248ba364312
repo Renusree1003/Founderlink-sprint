@@ -1,0 +1,21 @@
+spring.application.name=config-server
+
+# Server Port
+server.port=8888
+
+# Application Name
+spring.application.name=config-server
+
+# Git Repo (CONFIG REPO)
+spring.cloud.config.server.git.uri=https://github.com/your-username/founderlink-config-repo
+spring.cloud.config.server.git.clone-on-start=true
+
+# Optional: If private repo
+# spring.cloud.config.server.git.username=your-username
+# spring.cloud.config.server.git.password=your-password
+
+# Default branch
+spring.cloud.config.server.git.default-label=main
+
+# Logging
+logging.level.org.springframework.cloud.config=DEBUG

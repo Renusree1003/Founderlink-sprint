@@ -1,0 +1,5 @@
+package com.pro.auth_service.service;
+
+public class AuthService {
+
+}

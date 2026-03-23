@@ -1,0 +1,5 @@
+springdoc.swagger-ui.path=/swagger-ui.html
+springdoc.api-docs.path=/v3/api-docs
+
+# \uD83D\uDD25 IMPORTANT
+springdoc.swagger-ui.config-url=/v3/api-docs/swagger-config

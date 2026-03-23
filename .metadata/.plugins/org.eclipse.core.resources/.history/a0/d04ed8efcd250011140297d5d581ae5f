@@ -1,0 +1,5 @@
+package com.pro.startup_service.repository;
+
+public class StartupRepository {
+
+}

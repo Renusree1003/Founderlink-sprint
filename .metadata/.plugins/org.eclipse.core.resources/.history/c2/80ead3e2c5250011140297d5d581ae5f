@@ -1,0 +1,5 @@
+package com.pro.user_service.entity;
+
+public class UserProfile {
+
+}

@@ -1,0 +1,5 @@
+package com.pro.startup_service.dto;
+
+public class StartupRequest {
+
+}

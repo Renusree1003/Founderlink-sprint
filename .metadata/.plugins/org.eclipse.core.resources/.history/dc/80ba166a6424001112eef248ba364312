@@ -1,0 +1,5 @@
+package com.pro.api_gateway.filter;
+
+public class JwtAuthenticationFilter {
+
+}
