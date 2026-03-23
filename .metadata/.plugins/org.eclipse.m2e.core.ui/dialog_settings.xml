@@ -2,6 +2,8 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="C:\Users\hp\Desktop\FounderLink\team-service"/>
+			<item value="C:\Users\hp\Desktop\FounderLink\investment-service"/>
 			<item value="C:\Users\hp\Desktop\FounderLink\startup-service"/>
 			<item value="C:\Users\hp\Desktop\FounderLink\user-service"/>
 			<item value="C:\Users\hp\Desktop\FounderLink\auth-service"/>

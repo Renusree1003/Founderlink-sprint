@@ -20,17 +20,20 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<Object
 
             String path = exchange.getRequest().getURI().getPath();
 
-            // ✅ Skip auth + swagger
-            if (path.contains("/auth") ||
-                path.contains("/swagger") ||
+            // ✅ PUBLIC ENDPOINTS (NO JWT REQUIRED)
+            if (path.startsWith("/auth-service/auth") ||
+                path.contains("/swagger-ui") ||
                 path.contains("/v3/api-docs")) {
+
                 return chain.filter(exchange);
             }
 
+            // 🔐 GET HEADER
             String authHeader = exchange.getRequest()
                     .getHeaders()
                     .getFirst("Authorization");
 
+            // ❌ NO HEADER
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
@@ -39,8 +42,15 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<Object
             String token = authHeader.substring(7);
 
             try {
+                // ✅ VALIDATE TOKEN
                 JwtUtil.validateToken(token);
+
+                // 🔥 DEBUG LOG (optional)
+                System.out.println("JWT VALIDATED SUCCESSFULLY");
+
             } catch (Exception e) {
+                System.out.println("JWT INVALID: " + e.getMessage());
+
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
             }
