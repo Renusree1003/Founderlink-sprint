@@ -18,11 +18,11 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository; // 🔥 ADDED
+    private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // ✅ REGISTER USER + ASSIGN DEFAULT ROLE
+    // ✅ REGISTER USER + DEFAULT ROLE
     public String register(String email, String password) {
 
         User user = new User();
@@ -31,17 +31,17 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        // 🔥 Assign default role (ROLE_FOUNDER → id = 1)
+        // 🔥 Assign default role (FOUNDER)
         UserRole userRole = new UserRole();
         userRole.setUserId(savedUser.getId());
-        userRole.setRoleId(1L); // ⚠️ make sure this exists in DB
+        userRole.setRoleId(1L); // ROLE_FOUNDER
 
         userRoleRepository.save(userRole);
 
         return "User registered successfully";
     }
 
-    // ✅ LOGIN WITH ROLES FROM DB
+    // ✅ LOGIN USER
     public String login(String email, String password) {
 
         User user = userRepository.findByEmail(email)
@@ -51,9 +51,12 @@ public class AuthService {
             throw new RuntimeException("Invalid password");
         }
 
-        // ✅ FIX: assign role properly
-        List<String> roles = List.of("ROLE_FOUNDER");
+        // 🔥 FETCH ROLES FROM DB (THIS IS THE FIX)
+        List<String> roles = userRoleRepository.findRolesByUserId(user.getId());
 
-        return jwtUtil.generateToken(email, roles);
+        System.out.println("ROLES FROM DB: " + roles); // DEBUG
+
+        // 🔥 GENERATE TOKEN WITH ROLES
+        return jwtUtil.generateToken(String.valueOf(user.getId()), roles);
     }
 }

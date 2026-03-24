@@ -4,8 +4,14 @@
     <fullyQualifiedTypeName name="com.pro.auth_service.entity.User"/>
     <fullyQualifiedTypeName name="jakarta.persistence.Table"/>
     <fullyQualifiedTypeName name="jakarta.persistence.Id"/>
-    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestBody"/>
     <fullyQualifiedTypeName name="org.bouncycastle.jcajce.BCFKSLoadStoreParameter.SignatureAlgorithm"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.RequestBody"/>
     <fullyQualifiedTypeName name="io.jsonwebtoken.SignatureAlgorithm"/>
+    <fullyQualifiedTypeName name="org.springframework.data.repository.query.QueryLookupStrategy.Key"/>
+    <fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.ssl.SslBundleProperties.Key"/>
+    <fullyQualifiedTypeName name="java.awt.RenderingHints.Key"/>
     <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="io.jsonwebtoken.io.IOException"/>
+    <fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication"/>
+    <fullyQualifiedTypeName name="org.springframework.security.core.Authentication"/>
 </qualifiedTypeNameHistroy>

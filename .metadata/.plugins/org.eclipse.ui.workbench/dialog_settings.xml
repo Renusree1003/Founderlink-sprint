@@ -14,6 +14,11 @@
 			<item value="org.eclipse.jdt.ui.java"/>
 		</list>
 		<section name="NewWizard.dialogBounds">
+			<item key="DIALOG_X_ORIGIN" value="128"/>
+			<item key="DIALOG_Y_ORIGIN" value="107"/>
+			<item key="DIALOG_WIDTH" value="525"/>
+			<item key="DIALOG_HEIGHT" value="500"/>
+			<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 		</section>
 	</section>
 	<section name="org.eclipse.ui.internal.QuickAccess">
@@ -28,10 +33,11 @@
 			<item value="org.eclipse.e4.ui.parts"/>
 		</list>
 		<list key="textEntries">
-			<item value="1"/>
+			<item value="2"/>
 		</list>
 		<list key="textArray">
 			<item value="cons"/>
+			<item value="co"/>
 		</list>
 	</section>
 </section>

@@ -17,5 +17,7 @@ public class Startup {
     private String title;
     private String description;
     private String domain;
+    
+    @Column(name = "user_id")
     private Long userId; // creator
 }

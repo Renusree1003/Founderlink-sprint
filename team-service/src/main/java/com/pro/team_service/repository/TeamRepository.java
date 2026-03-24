@@ -11,4 +11,6 @@ import com.pro.team_service.entity.Team;
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
     List<Team> findByStartupId(Long startupId);
+    
+    List<Team> findByUserId(Long userId); 
 }

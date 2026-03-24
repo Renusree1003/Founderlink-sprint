@@ -2,6 +2,8 @@ package com.pro.team_service.service;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.pro.team_service.dto.TeamRequest;
@@ -36,8 +38,15 @@ public class TeamService {
         return repository.save(team);
     }
 
-    // Get team by startup
+    // ✅ ADD THIS BACK
     public List<Team> getByStartup(Long startupId) {
         return repository.findByStartupId(startupId);
+    }
+
+    // Get teams of logged-in user
+    public List<Team> getMyTeams() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = Long.parseLong(auth.getName());
+        return repository.findByUserId(userId);
     }
 }

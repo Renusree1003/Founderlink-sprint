@@ -23,24 +23,34 @@ public class TeamController {
 
     private final TeamService service;
 
-    // INVITE
+    // ✅ INVITE CO-FOUNDER
+    // Only Founder or Admin can invite
     @PostMapping("/invite")
     @PreAuthorize("hasAnyRole('FOUNDER','ADMIN')")
     public Team invite(@RequestBody TeamRequest req) {
         return service.invite(req);
     }
 
-    // JOIN
+    // ✅ JOIN TEAM
+    // Only Co-founder or Admin can join
     @PostMapping("/join")
     @PreAuthorize("hasAnyRole('COFOUNDER','ADMIN')")
     public Team join(@RequestBody TeamRequest req) {
         return service.join(req);
     }
 
-    // GET TEAM
+    // ✅ GET TEAM MEMBERS OF A STARTUP
+    // Founder, Co-founder, Investor, Admin can view
     @GetMapping("/startup/{id}")
-    @PreAuthorize("hasAnyRole('FOUNDER','COFOUNDER','ADMIN')")
+    @PreAuthorize("hasAnyRole('FOUNDER','COFOUNDER','INVESTOR','ADMIN')")
     public List<Team> getTeam(@PathVariable Long id) {
         return service.getByStartup(id);
+    }
+
+    // ✅ OPTIONAL: GET MY TEAM (BEST PRACTICE)
+    @GetMapping("/my")
+    @PreAuthorize("hasAnyRole('FOUNDER','COFOUNDER')")
+    public List<Team> getMyTeams() {
+        return service.getMyTeams(); // implement using JWT user
     }
 }
