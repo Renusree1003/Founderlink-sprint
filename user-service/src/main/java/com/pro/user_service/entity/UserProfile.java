@@ -1,7 +1,7 @@
 package com.pro.user_service.entity;
 
-
-
+import java.io.Serial;
+import java.io.Serializable;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +13,10 @@ import lombok.Data;
 @Entity
 @Table(name = "user_profiles")
 @Data
-public class UserProfile {
+public class UserProfile implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -28,18 +28,17 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
 
-                // ✅ Swagger (VERY IMPORTANT)
+                // ✅ Swagger endpoints (IMPORTANT)
                 .requestMatchers(
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
-                        "/swagger-ui.html",
-                        "/webjars/**"
+                        "/swagger-ui.html"
                 ).permitAll()
 
-                // ✅ Allow OPTIONS (for Swagger / browser)
-                .requestMatchers("/**").permitAll()
+                // ✅ Public APIs (example: auth service)
+                .requestMatchers("/api/auth/**").permitAll()
 
-                // 🔒 Secure APIs
+                // 🔒 Secure all other APIs
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)

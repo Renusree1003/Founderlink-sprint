@@ -14,4 +14,9 @@
     <fullyQualifiedTypeName name="io.jsonwebtoken.io.IOException"/>
     <fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties.Authentication"/>
     <fullyQualifiedTypeName name="org.springframework.security.core.Authentication"/>
+    <fullyQualifiedTypeName name="io.swagger.v3.oas.models.media.MediaType"/>
+    <fullyQualifiedTypeName name="org.springframework.http.MediaType"/>
+    <fullyQualifiedTypeName name="com.pro.messaging_service.entity.Message"/>
+    <fullyQualifiedTypeName name="com.rabbitmq.client.AMQP.Queue"/>
+    <fullyQualifiedTypeName name="org.springframework.amqp.core.Queue"/>
 </qualifiedTypeNameHistroy>

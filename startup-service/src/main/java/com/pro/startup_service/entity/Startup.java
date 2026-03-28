@@ -17,6 +17,7 @@ public class Startup {
     private String title;
     private String description;
     private String domain;
+    private String status = "PENDING";
     
     @Column(name = "user_id")
     private Long userId; // creator

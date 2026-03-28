@@ -1,6 +1,6 @@
 package com.pro.auth_service.entity;
 
-
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,5 +24,11 @@ public class User {
 
     private String password;
 
-    private boolean enabled = true;
+    private boolean enabled = false;
+
+    @Column(name = "otp_code", length = 6)
+    private String otpCode;
+
+    @Column(name = "otp_expiry_at")
+    private LocalDateTime otpExpiryAt;
 }

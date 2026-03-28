@@ -26,16 +26,6 @@ public class JwtFilter extends OncePerRequestFilter {
                                    FilterChain filterChain)
             throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-
-        // ✅ BYPASS Swagger & public endpoints
-        if (path.contains("/swagger-ui") ||
-            path.contains("/v3/api-docs") ||
-            path.contains("/webjars")) {
-
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         String header = request.getHeader("Authorization");
 
@@ -49,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 String username = claims.getSubject();
 
-                // ✅ SAFE ROLE EXTRACTION (FIXED)
+                // ✅ Extract roles safely
                 Object rolesObj = claims.get("roles");
 
                 List<String> roles;
@@ -67,13 +57,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 System.out.println("✅ ROLES: " + roles);
 
-                // ✅ CONVERT TO AUTHORITIES
+                // ✅ Convert roles → authorities
                 List<SimpleGrantedAuthority> authorities =
                         roles.stream()
                              .map(SimpleGrantedAuthority::new)
                              .toList();
 
-                // ✅ SET AUTH ONLY IF NOT ALREADY SET
+                // ✅ Set authentication if not already set
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
 
                     UsernamePasswordAuthenticationToken authentication =
@@ -96,7 +86,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
         } else {
-            System.out.println("❌ No Authorization Header");
+            System.out.println("⚠️ No Authorization Header (allowed for public APIs)");
         }
 
         filterChain.doFilter(request, response);
