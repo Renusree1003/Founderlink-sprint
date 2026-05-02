@@ -15,10 +15,10 @@ class JwtUtilTest {
 
     private JwtUtil jwtUtil;
 
-//    @BeforeEach
-//    void setUp() {
-//        jwtUtil = new JwtUtil();
-//    }
+    @BeforeEach
+    void setUp() {
+        jwtUtil = new JwtUtil("change-this-jwt-key-before-production-12345");
+    }
 
     // ─── generateToken ─────────────────────────────────────────────────────────
 
