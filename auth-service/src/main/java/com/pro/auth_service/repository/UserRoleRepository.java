@@ -24,4 +24,12 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
         WHERE ur.user_id = :userId
     """, nativeQuery = true)
     List<String> findRolesByUserId(@Param("userId") Long userId);
+
+    @Query(value = """
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ELSE false END
+        FROM user_roles ur
+        JOIN roles r ON ur.role_id = r.id
+        WHERE UPPER(r.name) = 'ROLE_ADMIN'
+    """, nativeQuery = true)
+    boolean existsAdminUser();
 }

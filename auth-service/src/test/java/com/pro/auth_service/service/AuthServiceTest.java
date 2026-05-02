@@ -2,6 +2,7 @@ package com.pro.auth_service.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -138,5 +139,17 @@ class AuthServiceTest {
         assertThrows(IllegalArgumentException.class, () -> authService.login("test@test.com", "wrong_pwd"));
         verify(userRepository, times(1)).findByEmail("test@test.com");
         verify(passwordEncoder, times(1)).matches("wrong_pwd", "encoded_pwd");
+    }
+
+    @Test
+    void testRegisterRejectsSecondAdmin() {
+        when(userRoleRepository.existsAdminUser()).thenReturn(true);
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> authService.register("admin2@test.com", "password", "ADMIN"));
+
+        assertEquals("Admin account already exists. Only one admin is allowed.", ex.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+        verify(notificationProducer, never()).sendNotification(any());
     }
 }

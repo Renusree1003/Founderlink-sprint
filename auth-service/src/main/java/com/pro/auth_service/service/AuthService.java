@@ -35,7 +35,9 @@ public class AuthService {
     private final NotificationProducer notificationProducer;
 
     public String register(String email, String password, String role) {
-        Long roleId = resolveRoleId(role);
+        String normalizedRole = normalizeRole(role);
+        enforceSingleAdminConstraint(normalizedRole);
+        Long roleId = resolveRoleId(normalizedRole);
 
         User user = userRepository.findByEmail(email)
                 .map(existingUser -> preparePendingUser(existingUser, password, roleId))
@@ -185,7 +187,13 @@ public class AuthService {
         userRoleRepository.save(userRole);
     }
 
-    private Long resolveRoleId(String role) {
+    private Long resolveRoleId(String normalizedRole) {
+        Role matchedRole = roleRepository.findByNameIgnoreCase(normalizedRole)
+                .orElseThrow(() -> new IllegalArgumentException("Role not configured in DB: " + normalizedRole));
+        return matchedRole.getId();
+    }
+
+    private String normalizeRole(String role) {
         if (role == null || role.isBlank()) {
             throw new IllegalArgumentException("Role is required for registration");
         }
@@ -200,10 +208,13 @@ public class AuthService {
         if (!allowedRoles.contains(normalizedRole)) {
             throw new IllegalArgumentException("Invalid role. Allowed values: FOUNDER, INVESTOR, COFOUNDER, ADMIN");
         }
+        return normalizedRole;
+    }
 
-        Role matchedRole = roleRepository.findByNameIgnoreCase(normalizedRole)
-                .orElseThrow(() -> new IllegalArgumentException("Role not configured in DB: " + normalizedRole));
-        return matchedRole.getId();
+    private void enforceSingleAdminConstraint(String normalizedRole) {
+        if ("ROLE_ADMIN".equals(normalizedRole) && userRoleRepository.existsAdminUser()) {
+            throw new IllegalArgumentException("Admin account already exists. Only one admin is allowed.");
+        }
     }
 
     private void assignOtp(User user) {
