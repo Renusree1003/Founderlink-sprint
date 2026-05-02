@@ -15,4 +15,7 @@ public class Conversation {
 
     private Long user1Id;
     private Long user2Id;
+
+    private String user1Name;
+    private String user2Name;
 }

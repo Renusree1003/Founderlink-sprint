@@ -18,6 +18,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.pro.startup_service.client.UserServiceClient;
 import com.pro.startup_service.entity.Startup;
@@ -55,11 +60,13 @@ class StartupServiceTest {
     @Test
     void testGetAll() {
         Startup startup = new Startup();
-        when(repository.findAll()).thenReturn(Arrays.asList(startup));
+        Page<Startup> page = new PageImpl<>(Arrays.asList(startup));
         
-        List<Startup> result = service.getAll();
-        assertEquals(1, result.size());
-        verify(repository, times(1)).findAll();
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(page);
+        
+        Page<Startup> result = service.getAll(null, null, PageRequest.of(0, 10));
+        assertEquals(1, result.getContent().size());
+        verify(repository, times(1)).findAll(any(Specification.class), any(Pageable.class));
     }
 
     @Test

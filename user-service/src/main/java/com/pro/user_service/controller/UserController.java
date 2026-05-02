@@ -23,10 +23,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/users")
 @Validated
-@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('FOUNDER','INVESTOR','COFOUNDER','ADMIN')")
@@ -41,19 +44,24 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or authentication.name == #id.toString()")
-    public UserProfile getById(@PathVariable Long id) {
+    @PreAuthorize("hasAnyRole('FOUNDER','INVESTOR','COFOUNDER','ADMIN')")
+    public UserProfile getById(@PathVariable(name = "id") Long id) {
         return userService.getById(id);
     }
 
     @GetMapping("/internal/{id}")
-    public UserSummaryResponse getInternalById(@PathVariable Long id) {
+    public UserSummaryResponse getInternalById(@PathVariable(name = "id") Long id) {
         return userService.getSummaryById(id);
+    }
+
+    @GetMapping("/internal/username/{username}")
+    public UserSummaryResponse getInternalByUsername(@PathVariable(name = "username") String username) {
+        return userService.getSummaryByUsername(username);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or authentication.name == #id.toString()")
-    public UserProfile update(@PathVariable Long id, @Valid @RequestBody UserRequest user) {
+    public UserProfile update(@PathVariable(name = "id") Long id, @Valid @RequestBody UserRequest user) {
         return userService.update(id, user);
     }
 }

@@ -15,10 +15,10 @@ class JwtUtilTest {
 
     private JwtUtil jwtUtil;
 
-    @BeforeEach
-    void setUp() {
-        jwtUtil = new JwtUtil();
-    }
+//    @BeforeEach
+//    void setUp() {
+//        jwtUtil = new JwtUtil();
+//    }
 
     // ─── generateToken ─────────────────────────────────────────────────────────
 

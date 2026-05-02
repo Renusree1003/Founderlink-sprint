@@ -21,4 +21,9 @@ public class Startup {
     
     @Column(name = "user_id")
     private Long userId; // creator
+
+    private String ownerName;
+
+    private String logoUrl;
+    private String pitchDeckUrl;
 }

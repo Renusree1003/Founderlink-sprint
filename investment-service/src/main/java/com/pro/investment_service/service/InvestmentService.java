@@ -21,11 +21,11 @@ public class InvestmentService {
         return repo.save(investment);
     }
 
-    public Investment approve(Long id) {
+    public Investment updateStatus(Long id, String status) {
         Investment inv = repo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Investment not found"));
 
-        inv.setStatus("APPROVED");
+        inv.setStatus(status);
         return repo.save(inv);
     }
 
@@ -35,5 +35,9 @@ public class InvestmentService {
 
     public List<Investment> getByInvestor(Long investorId) {
         return repo.findByInvestorId(investorId);
+    }
+
+    public List<Investment> getAll() {
+        return repo.findAll();
     }
 }

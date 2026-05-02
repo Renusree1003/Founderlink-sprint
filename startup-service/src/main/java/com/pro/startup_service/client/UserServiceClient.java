@@ -10,5 +10,5 @@ import com.pro.startup_service.dto.UserSummaryResponse;
 public interface UserServiceClient {
 
     @GetMapping("/{id}")
-    UserSummaryResponse getUserById(@PathVariable("id") Long id);
+    UserSummaryResponse getUserById(@PathVariable(name = "id") Long id);
 }

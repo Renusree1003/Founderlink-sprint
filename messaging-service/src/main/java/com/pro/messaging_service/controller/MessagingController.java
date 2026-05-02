@@ -37,7 +37,20 @@ public class MessagingController {
     // ✅ Get messages
     @GetMapping("/conversation/{id}")
     @PreAuthorize("hasAnyRole('FOUNDER','INVESTOR','COFOUNDER')")
-    public List<Message> getMessages(@PathVariable Long id) {
+    public List<Message> getMessages(@PathVariable(name = "id") Long id) {
         return service.getMessages(id);
+    }
+
+    // ✅ Get user's conversations
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAnyRole('FOUNDER','INVESTOR','COFOUNDER')")
+    public List<Conversation> getConversations(@PathVariable(name = "userId") Long userId) {
+        return service.getConversations(userId);
+    }
+
+    @DeleteMapping("/conversation/{id}")
+    @PreAuthorize("hasAnyRole('FOUNDER','INVESTOR','COFOUNDER')")
+    public void deleteConversation(@PathVariable(name = "id") Long id) {
+        service.deleteConversation(id);
     }
 }

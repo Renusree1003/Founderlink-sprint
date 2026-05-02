@@ -20,4 +20,6 @@ public class Investment {
     private Double amount;
 
     private String status; // PENDING / APPROVED
+    private String stripeSessionId;
+    private String paymentStatus; // paid / unpaid
 }

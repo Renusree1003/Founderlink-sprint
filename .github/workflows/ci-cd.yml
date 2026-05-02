@@ -1,0 +1,75 @@
+name: FounderLink CI/CD Pipeline
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  backend-ci:
+    name: Backend CI (${{ matrix.service }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: api-gateway
+            java: "21"
+          - service: auth-service
+            java: "21"
+          - service: config-server
+            java: "17"
+          - service: eureka-server
+            java: "17"
+          - service: investment-service
+            java: "17"
+          - service: messaging-service
+            java: "17"
+          - service: notification-service
+            java: "17"
+          - service: startup-service
+            java: "17"
+          - service: team-service
+            java: "17"
+          - service: user-service
+            java: "17"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: temurin
+          cache: maven
+
+      - name: Build and test ${{ matrix.service }}
+        working-directory: ./${{ matrix.service }}
+        run: |
+          chmod +x mvnw
+          ./mvnw -B clean verify
+
+  frontend-ci:
+    name: Frontend CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: ./frontend
+        run: npm run build

@@ -5,6 +5,9 @@ import com.pro.investment_service.entity.Investment;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public interface InvestmentRepository extends JpaRepository<Investment, Long> {
 
     List<Investment> findByStartupId(Long startupId);

@@ -34,6 +34,9 @@ public class SecurityConfig {
                         "/swagger-ui.html"
                 ).permitAll()
 
+                // File serving allowed (logos & pitch decks)
+                .requestMatchers("/startups/files/**").permitAll()
+
                 // All other requests need authentication
                 .anyRequest().authenticated()
             )

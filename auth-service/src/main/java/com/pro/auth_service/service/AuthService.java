@@ -106,6 +106,55 @@ public class AuthService {
         return jwtUtil.generateToken(String.valueOf(user.getId()), roles);
     }
 
+    public String forgotPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        if (!user.isEnabled()) {
+            throw new IllegalArgumentException("Email is not verified. Please verify OTP first.");
+        }
+
+        user.setOtpCode(generateOtp());
+        user.setOtpExpiryAt(LocalDateTime.now().plusMinutes(10));
+        userRepository.save(user);
+
+        sendForgotPasswordOtpNotification(user.getEmail(), user.getOtpCode());
+        log.info("Forgot password OTP sent for user id={}", user.getId());
+        return "Password reset OTP sent to your email.";
+    }
+
+    public String resetPassword(String email, String otp, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+
+        if (!user.isEnabled()) {
+            throw new IllegalArgumentException("Account is not active.");
+        }
+
+        if (user.getOtpCode() == null || user.getOtpExpiryAt() == null) {
+            throw new IllegalArgumentException("No OTP request found.");
+        }
+
+        if (user.getOtpExpiryAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("OTP expired. Please request again.");
+        }
+
+        if (!user.getOtpCode().equals(otp)) {
+            throw new IllegalArgumentException("Invalid OTP");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setOtpCode(null);
+        user.setOtpExpiryAt(null);
+        userRepository.save(user);
+
+        notificationProducer.sendNotification(new NotificationEvent(
+                user.getEmail(),
+                "Your FounderLink password has been reset successfully."));
+        log.info("Password reset successful for user id={}", user.getId());
+        return "Password reset successful. You can now login with your new password.";
+    }
+
     private User createPendingUser(String email, String password, Long roleId) {
         User user = new User();
         user.setEmail(email);
@@ -167,6 +216,12 @@ public class AuthService {
         notificationProducer.sendNotification(new NotificationEvent(
                 email,
                 "Your FounderLink OTP is " + otp + ". It expires in 10 minutes."));
+    }
+
+    private void sendForgotPasswordOtpNotification(String email, String otp) {
+        notificationProducer.sendNotification(new NotificationEvent(
+                email,
+                "Your FounderLink Password Reset OTP is " + otp + ". It expires in 10 minutes."));
     }
 
     private String generateOtp() {

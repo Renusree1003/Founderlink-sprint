@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pro.auth_service.dto.AuthRequest;
 import com.pro.auth_service.dto.EmailRequest;
+import com.pro.auth_service.dto.ResetPasswordRequest;
 import com.pro.auth_service.dto.VerifyOtpRequest;
 import com.pro.auth_service.service.AuthService;
 
@@ -39,6 +40,16 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@Valid @RequestBody AuthRequest request) {
         return authService.login(request.getEmail(), request.getPassword());
+    }
+
+    @PostMapping("/forgot-password")
+    public String forgotPassword(@Valid @RequestBody EmailRequest request) {
+        return authService.forgotPassword(request.getEmail());
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        return authService.resetPassword(request.getEmail(), request.getOtp(), request.getNewPassword());
     }
 
     @GetMapping("/test")

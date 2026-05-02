@@ -45,7 +45,7 @@ class InvestmentServiceTest {
     }
 
     @Test
-    void testApprove() {
+    void testUpdateStatus() {
         Investment existing = new Investment();
         existing.setId(1L);
         existing.setStatus("PENDING");
@@ -53,7 +53,7 @@ class InvestmentServiceTest {
         when(repo.findById(1L)).thenReturn(Optional.of(existing));
         when(repo.save(any(Investment.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        Investment result = service.approve(1L);
+        Investment result = service.updateStatus(1L, "APPROVED");
         assertNotNull(result);
         assertEquals("APPROVED", result.getStatus());
 
@@ -62,10 +62,10 @@ class InvestmentServiceTest {
     }
 
     @Test
-    void testApproveNotFound() {
+    void testUpdateStatusNotFound() {
         when(repo.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> service.approve(1L));
+        assertThrows(RuntimeException.class, () -> service.updateStatus(1L, "APPROVED"));
         verify(repo, times(1)).findById(1L);
     }
 

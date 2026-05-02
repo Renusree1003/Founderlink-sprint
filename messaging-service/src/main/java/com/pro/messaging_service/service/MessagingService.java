@@ -34,6 +34,8 @@ public class MessagingService {
         Conversation convo = new Conversation();
         convo.setUser1Id(request.getUser1Id());
         convo.setUser2Id(request.getUser2Id());
+        convo.setUser1Name(request.getUser1Name());
+        convo.setUser2Name(request.getUser2Name());
         Conversation savedConversation = conversationRepo.save(convo);
         log.info("Created conversation with id={}", savedConversation.getId());
         return savedConversation;
@@ -66,6 +68,16 @@ public class MessagingService {
 
     public List<Message> getMessages(Long conversationId) {
         return messageRepo.findByConversationIdOrderByTimestampAsc(conversationId);
+    }
+
+    public List<Conversation> getConversations(Long userId) {
+        return conversationRepo.findByUser1IdOrUser2Id(userId, userId);
+    }
+
+    public void deleteConversation(Long id) {
+        messageRepo.deleteAll(messageRepo.findByConversationIdOrderByTimestampAsc(id));
+        conversationRepo.deleteById(id);
+        log.info("Deleted conversation with id={}", id);
     }
 
     private Long resolveRecipientId(Conversation conversation, Long senderId) {

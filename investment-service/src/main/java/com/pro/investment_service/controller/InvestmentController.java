@@ -32,14 +32,27 @@ public class InvestmentController {
     // VIEW BY STARTUP
     @GetMapping("/startup/{id}")
     @PreAuthorize("hasAnyRole('FOUNDER','ADMIN')")
-    public List<Investment> getByStartup(@PathVariable Long id) {
+    public List<Investment> getByStartup(@PathVariable(name = "id") Long id) {
         return service.getByStartup(id);
     }
 
-    // VIEW BY INVESTOR
     @GetMapping("/investor/{id}")
     @PreAuthorize("hasAnyRole('INVESTOR','ADMIN')")
-    public List<Investment> getByInvestor(@PathVariable Long id) {
+    public List<Investment> getByInvestor(@PathVariable(name = "id") Long id) {
         return service.getByInvestor(id);
+    }
+
+    // VIEW ALL (for dashboard)
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('FOUNDER','INVESTOR','ADMIN')")
+    public List<Investment> getAll() {
+        return service.getAll();
+    }
+
+    // UPDATE STATUS
+    @PostMapping("/{id}/status/{status}")
+    @PreAuthorize("hasAnyRole('FOUNDER','ADMIN')")
+    public Investment updateStatus(@PathVariable(name = "id") Long id, @PathVariable(name = "status") String status) {
+        return service.updateStatus(id, status);
     }
 }

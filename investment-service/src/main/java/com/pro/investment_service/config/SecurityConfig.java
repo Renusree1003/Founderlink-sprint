@@ -28,6 +28,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/investments/stripe/webhook").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)

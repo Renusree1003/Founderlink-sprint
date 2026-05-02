@@ -1,5 +1,0 @@
-package com.pro.user_service.config;
-
-public class SecurityConfig {
-
-}

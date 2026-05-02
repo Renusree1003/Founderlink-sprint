@@ -1,9 +1,15 @@
 package com.pro.startup_service.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import jakarta.persistence.criteria.Predicate;
 
 import com.pro.startup_service.client.UserServiceClient;
 import com.pro.startup_service.dto.NotificationEvent;
@@ -32,8 +38,26 @@ public class StartupService {
         return savedStartup;
     }
 
-    public List<Startup> getAll() {
-        return repository.findAll();
+    public Page<Startup> getAll(String query, String domain, Pageable pageable) {
+        Specification<Startup> spec = (root, q, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            
+            if (query != null && !query.isBlank()) {
+                String searchPattern = "%" + query.toLowerCase() + "%";
+                predicates.add(cb.or(
+                    cb.like(cb.lower(root.get("title")), searchPattern),
+                    cb.like(cb.lower(root.get("description")), searchPattern)
+                ));
+            }
+            
+            if (domain != null && !domain.isBlank()) {
+                predicates.add(cb.equal(cb.lower(root.get("domain")), domain.toLowerCase()));
+            }
+            
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        
+        return repository.findAll(spec, pageable);
     }
 
     public Startup getById(Long id) {
@@ -47,6 +71,7 @@ public class StartupService {
         existing.setTitle(updated.getTitle());
         existing.setDescription(updated.getDescription());
         existing.setDomain(updated.getDomain());
+        existing.setOwnerName(updated.getOwnerName());
         existing.setStatus(updated.getStatus() == null || updated.getStatus().isBlank() ? "PENDING" : updated.getStatus());
         Startup savedStartup = repository.save(existing);
         notifyIfStatusChanged(savedStartup, previousStatus);
@@ -62,6 +87,11 @@ public class StartupService {
 
     public List<Startup> search(String keyword) {
         return repository.findByTitleContainingIgnoreCase(keyword);
+    }
+
+    /** Simple save used by file upload to persist URL changes. */
+    public Startup saveEntity(Startup startup) {
+        return repository.save(startup);
     }
 
     private void notifyIfStatusChanged(Startup startup, String previousStatus) {

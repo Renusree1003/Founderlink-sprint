@@ -43,7 +43,7 @@ public class TeamController {
     // Founder, Co-founder, Investor, Admin can view
     @GetMapping("/startup/{id}")
     @PreAuthorize("hasAnyRole('FOUNDER','COFOUNDER','INVESTOR','ADMIN')")
-    public List<Team> getTeam(@PathVariable Long id) {
+    public List<Team> getTeam(@PathVariable(name = "id") Long id) {
         return service.getByStartup(id);
     }
 
